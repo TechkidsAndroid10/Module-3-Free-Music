@@ -82,7 +82,7 @@ public class MusicFragment extends Fragment {
 
     private void setupUI(View view) {
         rvMusicType = view.findViewById(R.id.rv_music);
-        musicTypeAdapter = new MusicTypeAdapter(musicTypeModels);
+        musicTypeAdapter = new MusicTypeAdapter(musicTypeModels, getContext());
         rvMusicType.setAdapter(musicTypeAdapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(

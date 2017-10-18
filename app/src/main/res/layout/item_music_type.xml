@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:layout_margin="3dp">
 
     <ImageView
         android:layout_width="match_parent"
@@ -19,6 +20,7 @@
         android:padding="16dp"
         android:textColor="#fff"
         android:text="ALL"
+        android:textAllCaps="true"
         android:background="@drawable/custom_text_view_gradient"/>
 
 </RelativeLayout>

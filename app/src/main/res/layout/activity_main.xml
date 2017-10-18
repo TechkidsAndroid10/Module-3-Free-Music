@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/ll_container"
     android:background="@color/colorPrimary"
     tools:context="techkids.vn.freemusic.activities.MainActivity">
 
@@ -13,8 +14,9 @@
         android:id="@+id/tab_layout"/>
 
     <android.support.v4.view.ViewPager
+        android:layout_below="@id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/view_pager"/>
 
-</LinearLayout>
+</RelativeLayout>
