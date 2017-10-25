@@ -14,6 +14,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,9 +23,9 @@ import techkids.vn.freemusic.R;
 import techkids.vn.freemusic.adapters.MusicTypeAdapter;
 import techkids.vn.freemusic.databases.MusicTypeModel;
 import techkids.vn.freemusic.network.GetMusicTypesService;
-import techkids.vn.freemusic.network.MainObjectJSON;
+import techkids.vn.freemusic.network.json_model.MainObjectJSON;
 import techkids.vn.freemusic.network.RetrofitFactory;
-import techkids.vn.freemusic.network.SubgenresJSON;
+import techkids.vn.freemusic.network.json_model.SubgenresJSON;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +61,9 @@ public class MusicFragment extends Fragment {
             @Override
             public void onResponse(Call<MainObjectJSON> call, Response<MainObjectJSON> response) {
                 List<SubgenresJSON> subgenresJSONs = response.body().getSubgenres();
-                for (SubgenresJSON subgenresJSON : subgenresJSONs) {
+                for (int i = 0; i < subgenresJSONs.size(); i++) {
+                    SubgenresJSON subgenresJSON = subgenresJSONs.get(i);
+
                     MusicTypeModel musicTypeModel = new MusicTypeModel();
                     musicTypeModel.setId(subgenresJSON.getId());
                     musicTypeModel.setKey(subgenresJSON.getTranslation_key());
@@ -68,9 +72,9 @@ public class MusicFragment extends Fragment {
                                     "raw", context.getPackageName()));
 
                     musicTypeModels.add(musicTypeModel);
+                    musicTypeAdapter.notifyItemChanged(i);
                 }
-                musicTypeAdapter.notifyDataSetChanged();
-
+//                musicTypeAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -100,6 +104,8 @@ public class MusicFragment extends Fragment {
 
         rvMusicType.setLayoutManager(gridLayoutManager);
 
+        rvMusicType.setItemAnimator(new SlideInUpAnimator());
+        rvMusicType.getItemAnimator().setAddDuration(300);
     }
 
 }

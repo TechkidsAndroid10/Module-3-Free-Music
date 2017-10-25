@@ -1,4 +1,4 @@
-package techkids.vn.freemusic.network;
+package techkids.vn.freemusic.network.json_model;
 
 /**
  * Created by Admins on 10/12/2017.

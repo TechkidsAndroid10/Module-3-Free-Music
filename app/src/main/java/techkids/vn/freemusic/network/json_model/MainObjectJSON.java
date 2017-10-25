@@ -1,4 +1,4 @@
-package techkids.vn.freemusic.network;
+package techkids.vn.freemusic.network.json_model;
 
 import java.util.List;
 
