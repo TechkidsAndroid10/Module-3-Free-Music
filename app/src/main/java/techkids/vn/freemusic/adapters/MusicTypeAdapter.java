@@ -80,7 +80,7 @@ public class MusicTypeAdapter extends RecyclerView.Adapter<MusicTypeAdapter.Musi
 
                     EventBus.getDefault().postSticky(new OnClickMusicTypeEvent(musicTypeModel));
                     Utils.openFragment(((FragmentActivity) context).getSupportFragmentManager(),
-                            R.id.ll_container, new TopSongFragment());
+                            R.id.layout_container, new TopSongFragment());
                 }
             });
         }

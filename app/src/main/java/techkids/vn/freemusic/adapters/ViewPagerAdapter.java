@@ -2,6 +2,7 @@ package techkids.vn.freemusic.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import techkids.vn.freemusic.fragments.DownloadFragment;

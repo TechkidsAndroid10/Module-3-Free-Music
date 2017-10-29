@@ -4,14 +4,25 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import techkids.vn.freemusic.adapters.ViewPagerAdapter;
 import techkids.vn.freemusic.R;
+import techkids.vn.freemusic.events.OnTopSongEvent;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.toString();
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    @BindView(R.id.layout_mini)
+    RelativeLayout rlMini;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +30,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setupUI();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe
+    public void onReceivedTopSongEvent(OnTopSongEvent topSongEvent) {
+        rlMini.setVisibility(View.VISIBLE);
     }
 
     private void setupUI() {
+        ButterKnife.bind(this);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
 
