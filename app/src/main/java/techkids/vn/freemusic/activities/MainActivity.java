@@ -1,20 +1,29 @@
 package techkids.vn.freemusic.activities;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import techkids.vn.freemusic.adapters.ViewPagerAdapter;
 import techkids.vn.freemusic.R;
+import techkids.vn.freemusic.databases.TopSongModel;
 import techkids.vn.freemusic.events.OnTopSongEvent;
+import techkids.vn.freemusic.utils.MusicHandle;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.toString();
@@ -23,6 +32,16 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.layout_mini)
     RelativeLayout rlMini;
+    @BindView(R.id.tv_top_song_name)
+    TextView tvSong;
+    @BindView(R.id.tv_top_song_artist)
+    TextView tvArtist;
+    @BindView(R.id.seekbar)
+    SeekBar seekBar;
+    @BindView(R.id.iv_top_song)
+    ImageView ivSong;
+    @BindView(R.id.fb_mini)
+    FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void onReceivedTopSongEvent(OnTopSongEvent topSongEvent) {
         rlMini.setVisibility(View.VISIBLE);
+        TopSongModel topSongModel = topSongEvent.getTopSongModel();
+
+        tvSong.setText(topSongModel.getSong());
+        tvArtist.setText(topSongModel.getArtist());
+        Picasso.with(this).load(topSongModel.getSmallImage())
+                .transform(new CropCircleTransformation()).into(ivSong);
+
+        MusicHandle.searchSong(topSongModel, this);
+        MusicHandle.updateRealtime(seekBar, floatingActionButton);
     }
 
     private void setupUI() {
@@ -74,5 +102,14 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.addOnPageChangeListener
                 (new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        seekBar.setPadding(0, 0, 0, 0);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MusicHandle.playPause();
+            }
+        });
     }
 }

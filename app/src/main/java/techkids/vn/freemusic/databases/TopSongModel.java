@@ -8,6 +8,24 @@ public class TopSongModel {
     private String song;
     private String artist;
     private String smallImage;
+    private String url;
+    private String largeImage;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getLargeImage() {
+        return largeImage;
+    }
+
+    public void setLargeImage(String largeImage) {
+        this.largeImage = largeImage;
+    }
 
     public TopSongModel(String song, String artist, String smallImage) {
         this.song = song;
