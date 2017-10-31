@@ -3,6 +3,10 @@ package techkids.vn.freemusic.utils;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 
 /**
  * Created by Admins on 10/17/2017.
@@ -15,5 +19,22 @@ public class Utils {
         fragmentTransaction.add(layoutID, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    public static void rotateImage(ImageView imageView, boolean isRotate) {
+        RotateAnimation rotateAnimation = new RotateAnimation(0, 360,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+
+        rotateAnimation.setInterpolator(new LinearInterpolator());
+        rotateAnimation.setDuration(10000);
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
+
+        if (isRotate) {
+            if (imageView.getAnimation() == null)
+            imageView.startAnimation(rotateAnimation);
+        } else {
+            imageView.setAnimation(null);
+        }
     }
 }

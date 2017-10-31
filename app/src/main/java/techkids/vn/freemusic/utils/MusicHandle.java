@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import hybridmediaplayer.HybridMediaPlayer;
@@ -22,6 +23,7 @@ import techkids.vn.freemusic.network.json_model.SearchSongJSON;
 
 public class MusicHandle {
     public static HybridMediaPlayer hybridMediaPlayer;
+    private static boolean keepUpdating = true;
 
     public static void searchSong(final TopSongModel topSongModel, final Context context) {
 
@@ -70,14 +72,15 @@ public class MusicHandle {
     }
 
     public static void updateRealtime(final SeekBar seekBar,
-                                      final FloatingActionButton floatingActionButton) {
+                                      final FloatingActionButton floatingActionButton,
+                                      final ImageView imageView) {
 
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 //update UI
-                if (hybridMediaPlayer != null) {
+                if (keepUpdating && hybridMediaPlayer != null) {
                     seekBar.setMax(hybridMediaPlayer.getDuration());
                     seekBar.setProgress(hybridMediaPlayer.getCurrentPosition());
 
@@ -86,6 +89,8 @@ public class MusicHandle {
                     } else {
                         floatingActionButton.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                     }
+
+                    Utils.rotateImage(imageView, hybridMediaPlayer.isPlaying());
                 }
 
                 //repeat
@@ -93,5 +98,23 @@ public class MusicHandle {
             }
         };
         runnable.run();
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                keepUpdating = false;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                hybridMediaPlayer.seekTo(seekBar.getProgress());
+                keepUpdating = true;
+            }
+        });
     }
 }

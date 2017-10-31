@@ -2,6 +2,7 @@ package techkids.vn.freemusic.activities;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,9 +22,13 @@ import butterknife.ButterKnife;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import techkids.vn.freemusic.adapters.ViewPagerAdapter;
 import techkids.vn.freemusic.R;
+import techkids.vn.freemusic.databases.MusicTypeModel;
 import techkids.vn.freemusic.databases.TopSongModel;
+import techkids.vn.freemusic.events.OnClickMusicTypeEvent;
 import techkids.vn.freemusic.events.OnTopSongEvent;
+import techkids.vn.freemusic.fragments.TopSongFragment;
 import techkids.vn.freemusic.utils.MusicHandle;
+import techkids.vn.freemusic.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.toString();
@@ -51,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
         setupUI();
 
         EventBus.getDefault().register(this);
+
+        //TODO: fake
+        MusicTypeModel musicTypeModel = new MusicTypeModel();
+        musicTypeModel.setKey("All");
+        musicTypeModel.setImageID(R.raw.genre_x2_);
+        musicTypeModel.setId("");
+        EventBus.getDefault().postSticky(new OnClickMusicTypeEvent(musicTypeModel));
+        Utils.openFragment(getSupportFragmentManager(),
+                R.id.layout_container, new TopSongFragment());
     }
 
     @Subscribe
@@ -64,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 .transform(new CropCircleTransformation()).into(ivSong);
 
         MusicHandle.searchSong(topSongModel, this);
-        MusicHandle.updateRealtime(seekBar, floatingActionButton);
+        MusicHandle.updateRealtime(seekBar, floatingActionButton, ivSong);
     }
 
     private void setupUI() {
