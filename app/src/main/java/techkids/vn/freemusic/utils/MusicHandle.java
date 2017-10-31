@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import hybridmediaplayer.HybridMediaPlayer;
 import retrofit2.Call;
@@ -73,7 +74,9 @@ public class MusicHandle {
 
     public static void updateRealtime(final SeekBar seekBar,
                                       final FloatingActionButton floatingActionButton,
-                                      final ImageView imageView) {
+                                      final ImageView imageView,
+                                      final TextView tvCurrent,
+                                      final TextView tvDuration) {
 
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -91,6 +94,11 @@ public class MusicHandle {
                     }
 
                     Utils.rotateImage(imageView, hybridMediaPlayer.isPlaying());
+
+                    if (tvCurrent != null) {
+                        tvDuration.setText(Utils.convertTime(hybridMediaPlayer.getDuration()));
+                        tvCurrent.setText(Utils.convertTime(hybridMediaPlayer.getCurrentPosition()));
+                    }
                 }
 
                 //repeat

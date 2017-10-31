@@ -26,6 +26,7 @@ import techkids.vn.freemusic.databases.MusicTypeModel;
 import techkids.vn.freemusic.databases.TopSongModel;
 import techkids.vn.freemusic.events.OnClickMusicTypeEvent;
 import techkids.vn.freemusic.events.OnTopSongEvent;
+import techkids.vn.freemusic.fragments.MainPlayerFragment;
 import techkids.vn.freemusic.fragments.TopSongFragment;
 import techkids.vn.freemusic.utils.MusicHandle;
 import techkids.vn.freemusic.utils.Utils;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.fb_mini)
     FloatingActionButton floatingActionButton;
 
+    private TopSongModel topSongModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,19 +61,19 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         //TODO: fake
-        MusicTypeModel musicTypeModel = new MusicTypeModel();
-        musicTypeModel.setKey("All");
-        musicTypeModel.setImageID(R.raw.genre_x2_);
-        musicTypeModel.setId("");
-        EventBus.getDefault().postSticky(new OnClickMusicTypeEvent(musicTypeModel));
-        Utils.openFragment(getSupportFragmentManager(),
-                R.id.layout_container, new TopSongFragment());
+//        MusicTypeModel musicTypeModel = new MusicTypeModel();
+//        musicTypeModel.setKey("All");
+//        musicTypeModel.setImageID(R.raw.genre_x2_);
+//        musicTypeModel.setId("");
+//        EventBus.getDefault().postSticky(new OnClickMusicTypeEvent(musicTypeModel));
+//        Utils.openFragment(getSupportFragmentManager(),
+//                R.id.layout_container, new TopSongFragment());
     }
 
-    @Subscribe
+    @Subscribe(sticky = true)
     public void onReceivedTopSongEvent(OnTopSongEvent topSongEvent) {
         rlMini.setVisibility(View.VISIBLE);
-        TopSongModel topSongModel = topSongEvent.getTopSongModel();
+        topSongModel = topSongEvent.getTopSongModel();
 
         tvSong.setText(topSongModel.getSong());
         tvArtist.setText(topSongModel.getArtist());
@@ -78,7 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 .transform(new CropCircleTransformation()).into(ivSong);
 
         MusicHandle.searchSong(topSongModel, this);
-        MusicHandle.updateRealtime(seekBar, floatingActionButton, ivSong);
+        MusicHandle.updateRealtime(seekBar, floatingActionButton, ivSong,
+                null, null);
     }
 
     private void setupUI() {
@@ -123,6 +127,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MusicHandle.playPause();
+            }
+        });
+
+        rlMini.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.openFragment(getSupportFragmentManager(),
+                        R.id.ll_container,
+                        new MainPlayerFragment());
             }
         });
     }

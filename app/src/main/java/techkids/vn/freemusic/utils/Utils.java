@@ -8,6 +8,8 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by Admins on 10/17/2017.
  */
@@ -36,5 +38,12 @@ public class Utils {
         } else {
             imageView.setAnimation(null);
         }
+    }
+
+    public static String convertTime(long milis) {
+        long min = TimeUnit.MILLISECONDS.toMinutes(milis);
+        return String.format("%02d:%02d",
+                min,
+                TimeUnit.MILLISECONDS.toSeconds(milis - min*60*1000));
     }
 }

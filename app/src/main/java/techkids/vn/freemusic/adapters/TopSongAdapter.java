@@ -76,7 +76,7 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.TopSongV
                 @Override
                 public void onClick(View view) {
                     view.setClickable(false);
-                    EventBus.getDefault().post(new OnTopSongEvent(topSongModel));
+                    EventBus.getDefault().postSticky(new OnTopSongEvent(topSongModel));
                 }
             });
         }
