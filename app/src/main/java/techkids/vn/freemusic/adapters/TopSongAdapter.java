@@ -20,6 +20,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import techkids.vn.freemusic.R;
 import techkids.vn.freemusic.databases.TopSongModel;
 import techkids.vn.freemusic.events.OnTopSongEvent;
+import techkids.vn.freemusic.fragments.DownloadFragment;
 
 /**
  * Created by LapTop on 10/24/2017.
@@ -67,15 +68,18 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.TopSongV
         }
 
         public void setData(final TopSongModel topSongModel) {
-            Picasso.with(context).load(topSongModel.getSmallImage())
-                    .transform(new CropCircleTransformation())
-                    .into(imageView);
+            if (topSongModel.getSmallImage().equals(DownloadFragment.OFFLINE_MODE)) {
+                Picasso.with(context).load(R.drawable.offline_music)
+                        .transform(new CropCircleTransformation()).into(imageView);
+            } else {
+                Picasso.with(context).load(topSongModel.getSmallImage())
+                        .transform(new CropCircleTransformation()).into(imageView);
+            }
             tvSong.setText(topSongModel.getSong());
             tvArtist.setText(topSongModel.getArtist());
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    view.setClickable(false);
                     EventBus.getDefault().postSticky(new OnTopSongEvent(topSongModel));
                 }
             });

@@ -5,11 +5,29 @@ package techkids.vn.freemusic.databases;
  */
 
 public class TopSongModel {
+    private String type;
     private String song;
     private String artist;
     private String smallImage;
     private String url;
     private String largeImage;
+    private boolean isDownloaded;
+
+    public boolean isDownloaded() {
+        return isDownloaded;
+    }
+
+    public void setDownloaded(boolean downloaded) {
+        isDownloaded = downloaded;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getUrl() {
         return url;
@@ -31,6 +49,9 @@ public class TopSongModel {
         this.song = song;
         this.artist = artist;
         this.smallImage = smallImage;
+    }
+
+    public TopSongModel() {
     }
 
     public String getSong() {

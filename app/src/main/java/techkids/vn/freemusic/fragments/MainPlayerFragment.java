@@ -1,15 +1,18 @@
 package techkids.vn.freemusic.fragments;
 
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,7 +27,10 @@ import techkids.vn.freemusic.R;
 import techkids.vn.freemusic.databases.MusicTypeModel;
 import techkids.vn.freemusic.databases.TopSongModel;
 import techkids.vn.freemusic.events.OnTopSongEvent;
+import techkids.vn.freemusic.utils.DownloadHandler;
 import techkids.vn.freemusic.utils.MusicHandle;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,13 +97,51 @@ public class MainPlayerFragment extends Fragment {
 
     @Subscribe(sticky = true)
     public void onReceiveTopSong(OnTopSongEvent onTopSongEvent) {
-        TopSongModel topSongModel = onTopSongEvent.getTopSongModel();
+        final TopSongModel topSongModel = onTopSongEvent.getTopSongModel();
 
         tvSingerName.setText(topSongModel.getArtist());
         tvSongName.setText(topSongModel.getSong());
-        Picasso.with(getContext()).load(topSongModel.getLargeImage())
-                .transform(new CropCircleTransformation())
-                .into(ivSong);
+
+
+        Log.d("abcd", topSongModel.getLargeImage());
+        if (topSongModel.getLargeImage().equals(DownloadFragment.OFFLINE_MODE)) {
+            Picasso.with(getContext()).load(R.drawable.offline_music)
+                    .transform(new CropCircleTransformation())
+                    .into(ivSong);
+        } else {
+            Picasso.with(getContext()).load(topSongModel.getLargeImage())
+                    .transform(new CropCircleTransformation())
+                    .into(ivSong);
+        }
+
+        //check xem bài hát đã đc download chưa = cách lấy list đã down từ trong máy ra,
+        //so vs từng bài trong list theo tên bài hát + tên ca sĩ,
+        //trùng thì tức là down r
+        for (TopSongModel downloadedSong : DownloadHandler.getDownloadedSongs(getContext())) {
+            if ((topSongModel.getSong() + topSongModel.getArtist()).equals(
+                    downloadedSong.getSong() + downloadedSong.getArtist())) {
+                topSongModel.setDownloaded(true);
+            }
+        }
+
+        //nếu download r thì giảm alpha để icon mờ hơn
+        if (topSongModel.isDownloaded()) {
+            ivDownload.setAlpha(100);
+        } else {
+            ivDownload.setAlpha(255);
+        }
+
+        //click button để download
+        ivDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (topSongModel.isDownloaded()) {
+                    Toast.makeText(getContext(), "This song has already downloaded!", Toast.LENGTH_SHORT).show();
+                } else {
+                    DownloadHandler.downloadSong(getContext(), topSongModel, ivDownload);
+                }
+            }
+        });
 
         MusicHandle.updateRealtime(sb, fbPlay, ivSong, tvCurrentTime, tvDurationTime);
     }

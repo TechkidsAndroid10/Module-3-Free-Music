@@ -3,6 +3,7 @@ package techkids.vn.freemusic.utils;
 import android.content.Context;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -23,6 +24,7 @@ import techkids.vn.freemusic.network.json_model.SearchSongJSON;
  */
 
 public class MusicHandle {
+    private static final String TAG = "MusicHandle";
     public static HybridMediaPlayer hybridMediaPlayer;
     private static boolean keepUpdating = true;
 
@@ -54,6 +56,7 @@ public class MusicHandle {
         }
 
         hybridMediaPlayer = HybridMediaPlayer.getInstance(context);
+        Log.d(TAG, "playMusic: " + topSongModel.getUrl());
         hybridMediaPlayer.setDataSource(topSongModel.getUrl());
         hybridMediaPlayer.prepare();
         hybridMediaPlayer.setOnPreparedListener(new HybridMediaPlayer.OnPreparedListener() {

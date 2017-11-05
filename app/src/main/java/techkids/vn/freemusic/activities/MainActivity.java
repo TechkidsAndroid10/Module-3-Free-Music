@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,6 +27,7 @@ import techkids.vn.freemusic.databases.MusicTypeModel;
 import techkids.vn.freemusic.databases.TopSongModel;
 import techkids.vn.freemusic.events.OnClickMusicTypeEvent;
 import techkids.vn.freemusic.events.OnTopSongEvent;
+import techkids.vn.freemusic.fragments.DownloadFragment;
 import techkids.vn.freemusic.fragments.MainPlayerFragment;
 import techkids.vn.freemusic.fragments.TopSongFragment;
 import techkids.vn.freemusic.utils.MusicHandle;
@@ -77,10 +79,18 @@ public class MainActivity extends AppCompatActivity {
 
         tvSong.setText(topSongModel.getSong());
         tvArtist.setText(topSongModel.getArtist());
-        Picasso.with(this).load(topSongModel.getSmallImage())
-                .transform(new CropCircleTransformation()).into(ivSong);
 
-        MusicHandle.searchSong(topSongModel, this);
+        if (topSongModel.getSmallImage().equals(DownloadFragment.OFFLINE_MODE)) {
+            Picasso.with(this).load(R.drawable.offline_music)
+                    .transform(new CropCircleTransformation()).into(ivSong);
+            MusicHandle.playMusic(topSongModel, this);
+        } else {
+            Picasso.with(this).load(topSongModel.getSmallImage())
+                    .transform(new CropCircleTransformation()).into(ivSong);
+            MusicHandle.searchSong(topSongModel, this);
+        }
+
+
         MusicHandle.updateRealtime(seekBar, floatingActionButton, ivSong,
                 null, null);
     }
